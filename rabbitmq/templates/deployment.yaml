@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+  namespace: roboshop
+  # deployment labels
+  labels:
+    component: rabbitmq
+    project: roboshop
+    tier: database
+spec:
+  replicas: 1
+  # These are the labels replica set use to create pod replicas, this should match pod labels
+  selector:
+    matchLabels:
+      component: rabbitmq
+      project: roboshop
+      tier: database
+  # This is pod definition
+  template:
+    metadata:
+      labels:
+        component: rabbitmq
+        project: roboshop
+        tier: database
+    spec:
+      containers:
+      - name: rabbitmq
+        image: "{{ .Values.deployment.imageURL}}:{{ .Values.deployment.imageVersion }}"
+        envFrom:
+        - secretRef:
+            name: rabbitmq
